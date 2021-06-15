@@ -1,14 +1,17 @@
-const cheeseResolver = require('./resolvers/cheese');
+const {cheese, board} = require('./resolvers/index');
+const {location} = require('./resolvers/index');
 
 module.exports = {
   Query: {
     test: () => {
       return 'Hello World';
     },
-    ...cheeseResolver.Query,
+    ...location.Query,
+    ...cheese.Query,
+    ...board.Query,
   },
   Mutation: {
-    ...cheeseResolver.Mutation,
+    ...cheese.Mutation,
+    ...board.Mutation,
   }
-
 };

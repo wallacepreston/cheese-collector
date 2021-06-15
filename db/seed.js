@@ -1,6 +1,5 @@
 const db = require('./index');
-// const {Cheese} = require('./models');
-const Cheese = require('./models/cheese');
+const {Cheese, Board} = db;
 
 const cheeseData = [
   {
@@ -28,16 +27,47 @@ const cheeseData = [
     description: "Cheddar is a cow's milk cheese that originated in Somerset, England. Cheddar is not only a noun, but it's also a verb; 'to cheddar' refers to a cheesemaking process whereby the curds of the cow's milk are cooked and then milled into rice-size pieces.",
   },
 ];
+const boardData = [
+  {
+    type: 'French',
+    description: "Of course, French cheese is the best.",
+    rating: 5,
+  },
+  {
+    type: 'American',
+    description: "All-American, all the time.",
+    rating: 3,
+  },
+  {
+    type: 'Mix',
+    description: "Mixed bags are fun!",
+    rating: 4,
+  },
+];
 
 
 async function seed() {
   await db.sync({force: true});
   console.log('db synced!');
 
+  // Populate data
+  for (const board of boardData) {
+    await Board.create(board);
+  }
+  console.log(`seeded ${boardData.length} boards`);
+
   for (const cheese of cheeseData) {
     await Cheese.create(cheese);
   }
   console.log(`seeded ${cheeseData.length} cheeses`);
+  
+  // Associate data
+  const frenchCheeses = await Promise.all(['Roquefort', 'Camembert', 'Chevre'].map(cheeseTitle => Cheese.findOne({where: {title: cheeseTitle}})));
+  const frenchBoard = await Board.findOne({where: { type: 'French'}});
+  for (const cheese of frenchCheeses) {
+    await frenchBoard.addCheese(cheese);
+  }  
+  console.log(`added ${frenchCheeses.length} cheeses to French cheese board`);
 
   console.log(`seeded successfully`);
 }

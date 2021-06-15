@@ -1,9 +1,21 @@
-const Cheese = require('../db/models/cheese');
+const {Cheese} = require('../db');
 
 exports.Query = {
-  cheeses: (_, __) => Cheese.findAll(),
+  cheeses: async (_, {pageSize = 5, page}) => {
+    const {count, rows: cheeses} = await Cheese.findAndCountAll({
+      limit: pageSize,
+      offset: page ? (page - 1) * pageSize : 1,
+    });
+    console.log('cheeses: ', cheeses);
+    
+    return {
+      cheeses,
+      total: count
+    }
+  }
 }
 
 exports.Mutation = {
+  // (parent, arguments, context)
   createCheese: (_, data, __) => Cheese.create(data),
 }
