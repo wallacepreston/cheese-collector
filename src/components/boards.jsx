@@ -13,33 +13,35 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-const CHEESES = gql`
+const BOARDS = gql`
   query{
-    cheeses {
+    boards {
+      id
+      type
+      description
       cheeses {
         id
         title
         description
       }
-      total
     }
   }
 `;
 
-const Cheeses = () => {
-  const { loading, error, data } = useQuery(CHEESES);
+const Boards = () => {
+  const { loading, error, data } = useQuery(BOARDS);
 
   if (loading) return <Typography variant="body2" component="p">Loading...</Typography>;
-  if (error) return <Typography variant="body2" component="p">Error :(</Typography>;
+  if (error || !data.boards) return <Typography variant="body2" component="p">Error :(</Typography>;
 
   return <Box display="flex" flexWrap="wrap">
     {  
-      data.cheeses.cheeses.map(({ id, title, description }) => (
+      data.boards.map(({ id, type, description }) => (
         <div key={id} style={{ width: '30%', height: '20%', margin: '1%' }}>
           <Card variant="outlined" >
             <CardContent>
               <Typography color="textSecondary" gutterBottom>
-                {title}
+                {type}
               </Typography>
               <Typography variant="body2" component="p">
                 {description}
@@ -55,4 +57,4 @@ const Cheeses = () => {
   </Box>
 }
 
-export default Cheeses;
+export default Boards;

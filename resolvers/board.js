@@ -1,7 +1,8 @@
 const {Board, Cheese} = require('../db');
 
 exports.Query = {
-  boards: (_, __, ___, {fieldNodes}) => {
+  boards: (_, __, {token, user}, {fieldNodes}) => {
+    if (!user) return null;
     const fields = fieldNodes[0].selectionSet.selections;
     const selectFields = [];
     const include = [];

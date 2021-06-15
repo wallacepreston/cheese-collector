@@ -9,39 +9,42 @@ const chalk = require('chalk');
 const cors = require('cors');
 const { SERVER_ADDRESS = 'http://localhost:', PORT = 4000 } = process.env;
 const API_URL = process.env.API_URL || SERVER_ADDRESS + PORT;
+const jwt = require('jsonwebtoken');
 const { JWT_SECRET = 'neverTell' } = process.env;
 
 const gqlServer = new ApolloServer({
   typeDefs,
   resolvers,
-  // context: async ({req}) => {
-  //   const prefix = 'Bearer ';
-  //   const auth = req.header('Authorization');
+  context: async ({req}) => {
+    const prefix = 'Bearer ';
+    const auth = req.header('Authorization');   
+    let token; 
+    let user;
     
-  //   if (!auth) { // nothing to see here
-  //     throw new AuthenticationError('No valid login token found');
-  //   } else if (auth.startsWith(prefix)) {
-  //     const token = auth.slice(prefix.length);
-  //     if (! token) throw new AuthenticationError('No valid login token found');
+    if (!auth) { // no token sent
+      // throw new AuthenticationError('No valid login token found'); // this would require token for all routes
+      return; // we will authorize in each specific resolver
+    } else if (auth.startsWith(prefix)) {
+      token = auth.slice(prefix.length);
+      if (! token) throw new AuthenticationError('No valid login token found');
       
-  //     try {
-  //       const parsedToken = jwt.verify(token, JWT_SECRET);
+      try {
+        const parsedToken = jwt.verify(token, JWT_SECRET);
         
-  //       const id = parsedToken && parsedToken.id
-  //       if (id) {
-  //         req.user = await getUserById(id);
-  //         next();
-  //       }
-  //     } catch (error) {
-  //       next(error);
-  //     }
-  //   } else {
-  //     next({
-  //       name: 'AuthorizationHeaderError',
-  //       message: `Authorization token must start with ${ prefix }`
-  //     });
-  //   }
-  //   return { token, refreshedToken: await auth.refreshToken(token)};
+        const id = parsedToken && parsedToken.id
+        if (id) {
+          // req.user = await getUserById(id);
+          req.user = parsedToken;
+          user = parsedToken;
+        }
+      } catch (error) {
+        throw new AuthenticationError(error);
+      }
+    } else {
+      throw new AuthenticationError('No valid login token found');
+    }
+    return { token, user };
+  },
 });
 
 // GET /health

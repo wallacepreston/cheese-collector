@@ -1,7 +1,7 @@
 const {Cheese} = require('../db');
 
 exports.Query = {
-  cheeses: async (_, {pageSize = 5, page}) => {
+  cheeses: async (_, {pageSize = 5, page}, __) => {
     const {count, rows: cheeses} = await Cheese.findAndCountAll({
       limit: pageSize,
       offset: page ? (page - 1) * pageSize : 1,
