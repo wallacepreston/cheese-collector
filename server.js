@@ -78,10 +78,17 @@ app.get('/health', async (req, res, next) => {
   }
 });
 
+// static files
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'build')));
 
 // attach graphQL server
 gqlServer.applyMiddleware({app});
 
+// by default serve up the react app if we don't recognize the route
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+});
 
 // 404 handler
 app.get('*', (req, res) => {
