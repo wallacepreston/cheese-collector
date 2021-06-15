@@ -6,8 +6,6 @@ exports.Query = {
       limit: pageSize,
       offset: page ? (page - 1) * pageSize : 1,
     });
-    console.log('cheeses: ', cheeses);
-    
     return {
       cheeses,
       total: count
