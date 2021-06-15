@@ -1,6 +1,20 @@
-# Javascript Project Template
+# Cheese Collector
+An API for users to collect cheeses.
 
-Getting Started
+## Tech used
+- Backend
+  - Node
+  - Express
+  - GraphQL
+    - `apollo-server`
+    - `apollo-server-express`
+- Frontend
+  - React
+  - GraphQL
+    - `@apollo/client`
+  - React Context
+
+## Getting Started
 
     npm i
     createdb cheese-collector
