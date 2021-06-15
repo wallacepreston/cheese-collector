@@ -1,7 +1,16 @@
 # Cheese Collector
 An API for users to collect cheeses.
+## Getting Started
 
-## Tech used
+    npm i
+    createdb cheese-collector
+    npm run seed
+    npm run start:dev
+
+Visit http://localhost:4000/graphql to use the interactive GraphQL sandbox
+
+**INSTRUCTIONS BELOW "Tech Used"👇**
+## Tech Used
 - Backend
   - Node
   - Express
@@ -13,15 +22,6 @@ An API for users to collect cheeses.
   - GraphQL
     - `@apollo/client`
   - React Context
-
-## Getting Started
-
-    npm i
-    createdb cheese-collector
-    npm run seed
-    npm run start:dev
-
-Visit http://localhost:4000/graphql to use the interactive GraphQL sandbox
 
 ## Example queries
 ### Query
